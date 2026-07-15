@@ -21,6 +21,10 @@ Flink-Agent 面向大数据平台运维场景，实时采集本机及远程 Linu
 - AIReport 巡检报告持久化
 - 大数据基础设施集群态势与节点资源视图
 - 有界历史队列和降频进程扫描，避免页面与服务端卡顿
+<img width="1411" height="879" alt="image" src="https://github.com/user-attachments/assets/c3b4b44a-d277-4275-8cda-67ec21924c15" />
+<img width="1255" height="876" alt="image" src="https://github.com/user-attachments/assets/65e4ded8-dd12-4069-8d65-4f7bd20d267c" />
+<img width="325" height="406" alt="image" src="https://github.com/user-attachments/assets/cbedd323-60dd-4771-ba25-724b4476dd30" />
+
 
 ## 系统架构
 
