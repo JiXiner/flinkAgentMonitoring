@@ -126,7 +126,6 @@ h1 span { color: var(--muted); font-weight: 500; }
 .cluster-nodes { display: flex; flex-direction: column; gap: 5px; }
 .cluster-node { display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: 7px; color: #bfd2cb; font-size: 10px; }
 .cluster-node span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.simulated-badge { padding: 2px 5px; color: var(--warning); border: 1px solid rgba(255,189,89,.25); border-radius: 4px; font-size: 8px; }
 .empty-state { grid-column: 1 / -1; margin: 12px 0; color: var(--muted); font-size: 12px; }
 .server-dialog { width: min(900px, calc(100% - 30px)); color: var(--text); border: 1px solid var(--line); border-radius: 16px; background: #0d1c1a; box-shadow: 0 30px 90px #000; }
 .server-dialog::backdrop { background: rgba(1,8,7,.78); backdrop-filter: blur(5px); }

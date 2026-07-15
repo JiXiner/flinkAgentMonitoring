@@ -105,7 +105,7 @@
             byId("clusterMode").textContent = "等待真实中间件接入";
             return;
         }
-        byId("clusterMode").textContent = clusters.some((item) => item.mode === "simulated") ? "本机模拟节点" : "真实集群";
+        byId("clusterMode").textContent = state.serverId ? "远程集群节点" : "本机集群节点";
         clusters.forEach((cluster) => {
             const card = document.createElement("article"); card.className = "cluster-card";
             const header = document.createElement("header");
@@ -124,9 +124,6 @@
                 row.append(name, cpu, memory); nodes.appendChild(row);
             });
             card.append(header, summary, nodes);
-            if (cluster.mode === "simulated") {
-                const badge = document.createElement("span"); badge.className = "simulated-badge"; badge.textContent = "SIMULATED / 非真实生产数据"; card.appendChild(badge);
-            }
             container.appendChild(card);
         });
     }
