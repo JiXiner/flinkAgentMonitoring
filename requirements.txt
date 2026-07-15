@@ -1,0 +1,11 @@
+Django==4.2.30
+djangorestframework==3.16.1
+channels[daphne]==4.3.2
+psutil==5.9.8
+requests==2.31.0
+paramiko==2.12.0
+bcrypt==3.2.2
+python-dotenv==1.0.1
+# 当前项目 Python 3.9 运行时需要兼容的 Windows 二进制版本。
+cryptography==3.4.8
+pyOpenSSL==21.0.0

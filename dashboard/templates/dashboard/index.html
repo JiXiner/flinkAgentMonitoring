@@ -1,0 +1,132 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flink-Agent 智能运维中心</title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div>
+            <p class="eyebrow">REAL-TIME OPERATIONS</p>
+            <h1>Flink-Agent <span>智能运维中心</span></h1>
+        </div>
+        <div class="top-actions">
+            <select id="serverSelect" aria-label="选择监控服务器"><option value="">本机节点</option></select>
+            <button class="outline-button" id="manageServers" type="button">管理服务器</button>
+            <div class="connection" id="connectionState" aria-live="polite"><i></i><span>正在连接 Agent</span></div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div>
+                <p class="section-label" id="serverLabel">LOCAL SERVER / 本机节点</p>
+                <h2 id="serverTitle">系统运行态势</h2>
+                <p class="hero-copy">每秒采集一次核心指标，通过 WebSocket 实时推送，无需刷新页面。</p>
+            </div>
+            <div class="clock"><span>最后采集</span><strong id="lastTime">--:--:--</strong></div>
+        </section>
+
+        <section class="metric-grid" aria-label="服务器核心指标">
+            <article class="metric-card cpu-card">
+                <div class="metric-head"><span>CPU LOAD</span><b id="cpuLevel">等待数据</b></div>
+                <div class="metric-value"><strong id="cpuValue">--</strong><em>%</em></div>
+                <div class="progress"><i id="cpuProgress"></i></div>
+                <p><span id="cpuCores">-- 核心</span><span id="cpuFrequency">-- MHz</span></p>
+            </article>
+            <article class="metric-card memory-card">
+                <div class="metric-head"><span>MEMORY</span><b id="memoryLevel">等待数据</b></div>
+                <div class="metric-value"><strong id="memoryValue">--</strong><em>%</em></div>
+                <div class="progress"><i id="memoryProgress"></i></div>
+                <p><span id="memoryUsed">-- GB 已用</span><span id="memoryTotal">共 -- GB</span></p>
+            </article>
+            <article class="metric-card disk-card">
+                <div class="metric-head"><span>DISK</span><b id="diskLevel">等待数据</b></div>
+                <div class="metric-value"><strong id="diskValue">--</strong><em>%</em></div>
+                <div class="progress"><i id="diskProgress"></i></div>
+                <p><span id="diskUsed">-- GB 已用</span><span id="diskIo">R -- / W --</span></p>
+            </article>
+            <article class="metric-card network-card">
+                <div class="metric-head"><span>NETWORK</span><b>实时速率</b></div>
+                <div class="network-values"><div><span>DOWNLOAD</span><strong id="netIn">--</strong></div><div><span>UPLOAD</span><strong id="netOut">--</strong></div></div>
+                <p><span>每秒采样</span><span>自动换算单位</span></p>
+            </article>
+        </section>
+
+        <section class="panel cluster-panel">
+            <div class="panel-heading">
+                <div><p class="section-label">DATA INFRASTRUCTURE</p><h3>大数据基础设施集群</h3></div>
+                <span id="clusterMode">本机模拟节点</span>
+            </div>
+            <div class="cluster-grid" id="serviceClusters"><p class="empty-state">等待集群数据…</p></div>
+        </section>
+
+        <section class="content-grid">
+            <article class="panel chart-panel">
+                <div class="panel-heading">
+                    <div><p class="section-label">LIVE STREAM</p><h3>CPU 与内存趋势</h3></div>
+                    <span>最近 60 秒</span>
+                </div>
+                <div id="metricsChart" class="chart" role="img" aria-label="CPU 与内存实时趋势图"></div>
+            </article>
+            <aside class="panel assistant-panel">
+                <div class="assistant-heading">
+                    <div class="bot-avatar">JX<i></i></div>
+                    <div><p class="section-label">OPS ASSISTANT</p><h3>@Jix 智能运维助手</h3></div>
+                    <button class="assistant-mode" id="inspectNow" type="button">立即巡检</button>
+                </div>
+                <div class="health-compact">
+                    <div><span>健康评分</span><strong><i id="healthScore">--</i>/100</strong></div>
+                    <div><span>当前状态</span><strong id="healthTitle">建立基线</strong></div>
+                </div>
+                <div class="assistant-messages" id="assistantMessages" aria-live="polite">
+                    <div class="message bot-message">
+                        <span>@Jix</span>
+                        <p>已进入静默值守。只有发现需要干预的风险、明显异常或定期巡检产生优化项时，我才会主动提醒。</p>
+                    </div>
+                </div>
+                <form class="assistant-input" id="assistantForm">
+                    {% csrf_token %}
+                    <label class="sr-only" for="assistantQuestion">询问运维助手</label>
+                    <input id="assistantQuestion" autocomplete="off" placeholder="询问当前服务器状态…">
+                    <button type="submit" aria-label="发送问题">发送</button>
+                </form>
+            </aside>
+        </section>
+
+        <section class="panel process-panel">
+            <div class="panel-heading">
+                <div><p class="section-label">PROCESS INSIGHT</p><h3>高资源进程 TOP 10</h3></div>
+                <div class="process-tabs"><button class="active" data-process-tab="cpu">CPU</button><button data-process-tab="memory">内存</button></div>
+            </div>
+            <div class="process-table-wrap">
+                <table><thead><tr><th>进程</th><th>PID</th><th>用户</th><th>CPU</th><th>内存</th></tr></thead><tbody id="processTable"><tr><td colspan="5">等待进程数据…</td></tr></tbody></table>
+            </div>
+        </section>
+    </main>
+</div>
+<dialog class="server-dialog" id="serverDialog">
+    <div class="dialog-heading"><div><p class="section-label">SERVER CLUSTER</p><h3>服务器集群管理</h3></div><button type="button" id="closeServerDialog">×</button></div>
+    <div class="server-dialog-grid">
+        <form id="serverForm" class="server-form">
+            {% csrf_token %}
+            <label>名称<input name="name" required placeholder="例如：Flink Worker 01"></label>
+            <label>IP 地址<input name="ip" required placeholder="192.168.1.20"></label>
+            <label>SSH 端口<input name="port" type="number" value="22" min="1" max="65535" required></label>
+            <label>用户名<input name="username" required placeholder="ops"></label>
+            <label>密码<input name="password" type="password" autocomplete="new-password" required></label>
+            <label>说明<input name="description" placeholder="生产 Flink 节点"></label>
+            <button type="submit">添加并加密保存</button>
+            <p id="serverFormStatus" aria-live="polite"></p>
+        </form>
+        <div class="server-list" id="serverList"><p class="empty-state">正在加载服务器…</p></div>
+    </div>
+</dialog>
+<script src="{% static 'dashboard/js/dashboard.js' %}"></script>
+</body>
+</html>
